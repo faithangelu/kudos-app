@@ -4,7 +4,7 @@ import Axios from "axios";
 import Page from "./Page";
 import LoadingDotsIcon from "./LoadingDotsIcon";
 
-function ProfilePosts() {
+function ProfileFollowers() {
   const { username } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
@@ -13,7 +13,7 @@ function ProfilePosts() {
     const ourRequest = Axios.CancelToken.source();
     async function fetchPosts() {
       try {
-        const response = await Axios.get(`/profile/${username}/posts`, {
+        const response = await Axios.get(`/profile/${username}/followers`, {
           cancelToken: ourRequest.token
         });
         setPosts(response.data);
@@ -37,20 +37,15 @@ function ProfilePosts() {
 
   return (
     <div className="list-group">
-      {posts.map(post => {
-        const date = new Date(post.createdDate);
-        const dateFormatted = `${
-          date.getMonth() + 1
-        }/${date.getDate()}/${date.getFullYear()}`;
+      {posts.map((follower, index) => {
         return (
           <Link
-            to={`/post/${post._id}`}
-            key={post._id}
+            to={`/profile/${follower.username}`}
+            key={index}
             className="list-group-item list-group-item-action"
           >
-            <img className="avatar-tiny" src={post.author.avatar} />{" "}
-            <strong>{post.title} </strong>
-            <span className="text-muted small">on {dateFormatted}</span>
+            <img className="avatar-tiny" src={follower.avatar} />{" "}
+            {follower.username}
           </Link>
         );
       })}
@@ -58,4 +53,4 @@ function ProfilePosts() {
   );
 }
 
-export default ProfilePosts;
+export default ProfileFollowers;

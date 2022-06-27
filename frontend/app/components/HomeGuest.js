@@ -17,7 +17,7 @@ function HomeGuest() {
       });
       console.log("User was successfully created.");
     } catch (err) {
-      console.log("There was an error." + err);
+      console.log("There was an error. " + err);
     }
   }
 

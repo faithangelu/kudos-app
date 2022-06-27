@@ -35,7 +35,7 @@ function ViewSinglePost() {
     return () => {
       ourRequest.cancel();
     };
-  }, []);
+  }, [id]);
 
   if (!isLoading && !post) {
     return <NotFound />;
@@ -85,7 +85,7 @@ function ViewSinglePost() {
   }
 
   return (
-    <Page title="post.title">
+    <Page title={post.title}>
       <div className="d-flex justify-content-between">
         <h2>{post.title}</h2>
         {isOwner && (
