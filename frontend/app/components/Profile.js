@@ -143,6 +143,7 @@ function Profile() {
               Follow <i className="fas fa-user-plus"></i>
             </button>
           )}
+        {/* console.log(state.profileData); */}
         {appState.loggedIn &&
           state.profileData.isFollowing &&
           appState.user.username != state.profileData.profileUsername &&
@@ -171,8 +172,20 @@ function Profile() {
 
       <Routes>
         <Route path="" element={<ProfilePosts />} />
-        <Route path="followers" element={<ProfileFollowers />} />
-        <Route path="following" element={<ProfileFollowing />} />
+        <Route
+          path="followers"
+          element={
+            <ProfileFollowers follow={state.profileData.counts.followerCount} />
+          }
+        />
+        <Route
+          path="following"
+          element={
+            <ProfileFollowing
+              follow={state.profileData.counts.followingCount}
+            />
+          }
+        />
       </Routes>
     </Page>
   );

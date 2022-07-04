@@ -30,6 +30,9 @@ io.on("connection", function (socket) {
       console.log("Not a valid token for chat.");
     }
   });
+  socket.on("connect_error", err => {
+    console.log(`connect_error due to ${err.message}`);
+  });
 });
 
 module.exports = server;

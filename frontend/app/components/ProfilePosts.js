@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Axios from "axios";
 import Page from "./Page";
 import LoadingDotsIcon from "./LoadingDotsIcon";
+import Post from "./Post";
 
 function ProfilePosts() {
   const { username } = useParams();
@@ -18,6 +19,7 @@ function ProfilePosts() {
         });
         setPosts(response.data);
         setIsLoading(false);
+        console.log(username);
       } catch (err) {
         console.log("There was a problem: " + err);
       }
@@ -38,21 +40,7 @@ function ProfilePosts() {
   return (
     <div className="list-group">
       {posts.map(post => {
-        const date = new Date(post.createdDate);
-        const dateFormatted = `${
-          date.getMonth() + 1
-        }/${date.getDate()}/${date.getFullYear()}`;
-        return (
-          <Link
-            to={`/post/${post._id}`}
-            key={post._id}
-            className="list-group-item list-group-item-action"
-          >
-            <img className="avatar-tiny" src={post.author.avatar} />{" "}
-            <strong>{post.title} </strong>
-            <span className="text-muted small">on {dateFormatted}</span>
-          </Link>
-        );
+        return <Post noAuthor={true} key={post._id} post={post} />;
       })}
     </div>
   );

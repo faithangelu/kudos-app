@@ -4,7 +4,7 @@ import Axios from "axios";
 import Page from "./Page";
 import LoadingDotsIcon from "./LoadingDotsIcon";
 
-function ProfileFollowing() {
+function ProfileFollowing(props) {
   const { username } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
@@ -37,6 +37,11 @@ function ProfileFollowing() {
 
   return (
     <div className="list-group">
+      {props.follow === 0 ? (
+        <p>You don't follow anyone. Start to socialize now! </p>
+      ) : (
+        ""
+      )}
       {posts.map((follower, index) => {
         return (
           <Link

@@ -20,21 +20,6 @@ function HeaderLoggedIn(props) {
     appDispatch({ type: "openSearch" });
   }
 
-  function likeHandler(e) {
-    e.preventDefault();
-    console.log(like);
-
-    if (like <= 100) {
-      setLike(like + 1);
-      // setClicked(true);
-    } else {
-      setLike(like - 1);
-      // setClicked(false);
-    }
-
-    clicked ? setClicked("") : setClicked("liked");
-  }
-
   return (
     <div className="flex-row my-3 my-md-0">
       <a
@@ -48,6 +33,7 @@ function HeaderLoggedIn(props) {
       </a>
       <ReactTooltip place="bottom" id="search" className="custome-tooltip" />{" "}
       <span
+        onClick={() => appDispatch({ type: "toggleChat" })}
         data-for="chat"
         data-tip="Chat"
         className="mr-2 header-chat-icon text-white"
@@ -65,18 +51,12 @@ function HeaderLoggedIn(props) {
         <img className="small-header-avatar" src={appState.user.avatar} />{" "}
       </Link>
       <ReactTooltip place="bottom" id="profile" className="custome-tooltip" />
-      {/* <span className="mr-2 header-chat-icon text-white">
+      <span className="mr-2 header-chat-icon text-white">
         {appState.user.username}
-      </span> */}{" "}
+      </span>{" "}
       <Link className="btn btn-sm btn-success mr-2" to="/create-post">
         Create Post
       </Link>{" "}
-      <button
-        onClick={likeHandler}
-        className={"btn btn-sm btn-primary like-button " + clicked}
-      >
-        <span className="like-counter"> Like | {like} </span>
-      </button>{" "}
       <button onClick={handleLogOut} className="btn btn-sm btn-secondary">
         Sign Out
       </button>
