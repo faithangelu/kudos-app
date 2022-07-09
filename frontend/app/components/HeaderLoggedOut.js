@@ -20,8 +20,16 @@ function HeaderLoggedOut(props) {
         // localStorage.setItem("complexAppUsername", response.data.username);
         // localStorage.setItem("complexAppAvatar", response.data.avatar);
         appDispatch({ type: "login", data: response.data });
+        appDispatch({
+          type: "flashMessage",
+          value: "You have successfully logged in"
+        });
       } else {
         console.log("Incorrect username / password");
+        appDispatch({
+          type: "flashMessage",
+          value: "Incorrect username / password"
+        });
       }
     } catch (err) {
       console.log("There was an error" + err);
@@ -48,6 +56,7 @@ function HeaderLoggedOut(props) {
             className="form-control form-control-sm input-dark"
             type="password"
             placeholder="Password"
+            autoComplete="off"
           />
         </div>
         <div className="col-md-auto">

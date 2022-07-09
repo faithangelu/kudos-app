@@ -1,11 +1,10 @@
 import React, { useEffect, useContext, useRef } from "react";
 import StateContext from "../StateContext";
 import DispatchContext from "../DispatchContext";
-import { Link } from "react-router-dom";
 import { useImmer } from "use-immer";
+import { Link } from "react-router-dom";
 import io from "socket.io-client";
-
-const socket = io(window.location.hostname + ":3000");
+const socket = io("http://localhost:8080");
 
 function Chat() {
   const chatField = useRef(null);
@@ -20,21 +19,24 @@ function Chat() {
   useEffect(() => {
     if (appState.isChatOpen) {
       chatField.current.focus();
+      appDispatch({ type: "clearUnreadChatCount" });
     }
   }, [appState.isChatOpen]);
 
   useEffect(() => {
-    // console.log("chatFromServer 27"); // showing
-    socket.on("chatFromServer", function (message) {
+    socket.on("chatFromServer", message => {
       setState(draft => {
         draft.chatMessages.push(message);
       });
-      console.log("chatFromServer 32"); // not showing
     });
-    socket.on("connect_error", err => {
-      console.log(`connect_error due to ${err.message}`);
-    });
-  });
+  }, []);
+
+  useEffect(() => {
+    chatLog.current.scrollTop = chatLog.current.scrollHeight;
+    if (state.chatMessages.length && !appState.isChatOpen) {
+      appDispatch({ type: "incrementChatCount" });
+    }
+  }, [state.chatMessages]);
 
   function handleFieldChange(e) {
     const value = e.target.value;
@@ -45,15 +47,12 @@ function Chat() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // send message to chat server
     socket.emit("chatFromBrowser", {
       message: state.fieldValue,
       token: appState.user.token
     });
-    console.log("handle submit log");
 
     setState(draft => {
-      // Add message to state collectiom
       draft.chatMessages.push({
         message: draft.fieldValue,
         username: appState.user.username,
@@ -84,7 +83,7 @@ function Chat() {
         {state.chatMessages.map((message, index) => {
           if (message.username == appState.user.username) {
             return (
-              <div className="chat-self" key={`chat-messages-${index}`}>
+              <div className="chat-self" key={index}>
                 <div className="chat-message">
                   <div className="chat-message-inner">{message.message}</div>
                 </div>
@@ -95,14 +94,14 @@ function Chat() {
 
           return (
             <div key={index} className="chat-other">
-              <a href="#">
+              <Link to={`/profile/${message.username}`}>
                 <img className="avatar-tiny" src={message.avatar} />
-              </a>
+              </Link>
               <div className="chat-message">
                 <div className="chat-message-inner">
-                  <a href="#">
+                  <Link to={`/profile/${message.username}`}>
                     <strong>{message.username}:</strong>
-                  </a>
+                  </Link>
                   {message.message}
                 </div>
               </div>
@@ -116,9 +115,9 @@ function Chat() {
         className="chat-form border-top"
       >
         <input
-          ref={chatField}
-          onChange={handleFieldChange}
           value={state.fieldValue}
+          onChange={handleFieldChange}
+          ref={chatField}
           type="text"
           className="chat-field"
           id="chatField"
